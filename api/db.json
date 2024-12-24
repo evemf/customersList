@@ -1,0 +1,36 @@
+{
+    "customers": [
+      {
+        "id": 1,
+        "name": "Evelia Molina",
+        "email": "evelia.molina@email.com",
+        "tel": "123456789",
+        "products": [1, 2]
+      },
+      {
+        "id": 2,
+        "name": "Miquel García",
+        "email": "miquel.garcia@email.com",
+        "tel": "987654321",
+        "products": [3]
+      }
+    ],
+    "products": [
+      {
+        "id": 1,
+        "name": "Producte A",
+        "descr": "Descripció del Producte A"
+      },
+      {
+        "id": 2,
+        "name": "Producte B",
+        "descr": "Descripció del Producte B"
+      },
+      {
+        "id": 3,
+        "name": "Producte C",
+        "descr": "Descripció del Producte C"
+      }
+    ]
+  }
+  
