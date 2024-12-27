@@ -5,6 +5,7 @@
         "name": "Evelia Molina",
         "email": "evelia.molina@email.com",
         "tel": "123456789",
+        "profileImage": "https://randomuser.me/api/portraits/women/1.jpg",
         "products": [1, 2]
       },
       {
@@ -12,6 +13,7 @@
         "name": "Miquel García",
         "email": "miquel.garcia@email.com",
         "tel": "987654321",
+        "profileImage": "https://randomuser.me/api/portraits/men/2.jpg",
         "products": [3]
       },
       {
@@ -19,6 +21,7 @@
         "name": "Carlos Ojeda",
         "email": "carlos.ojeda@email.com",
         "tel": "123498765",
+        "profileImage": "https://randomuser.me/api/portraits/men/3.jpg",
         "products": [1, 3]
       }
     ],

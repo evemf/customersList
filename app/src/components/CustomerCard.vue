@@ -6,6 +6,9 @@
       <div class="customer-card__content">
         <h1 class="customer-card__title">Perfil de Client</h1>
         <div v-if="customer" class="customer-card__info">
+          <div class="customer-card__image">
+            <img :src="customer.profileImage" alt="Profile Image" class="customer-card__profile-image" />
+          </div>
           <div class="customer-card__details">
             <p><strong>Nom:</strong> {{ customer.name }}</p>
             <p><strong>Email:</strong> {{ customer.email }}</p>
@@ -146,6 +149,14 @@
   
   .customer-card__link:active {
     color: #0056b3;
+  }
+  
+  .customer-card__image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
   }
   </style>
   
