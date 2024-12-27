@@ -1,6 +1,6 @@
 <template>
     <div class="customers-table">
-      <h1 class="customers-table__title">Customer List</h1>
+      <h1 class="customers-table__title">Llistat de Clients</h1>
       <vue-good-table
         :columns="columns"
         :rows="customers"
@@ -42,10 +42,10 @@
         customers: [],
         products: [],
         columns: [
-          { label: "Name", field: "name", sortable: true },
+          { label: "Nom", field: "name", sortable: true },
           { label: "Email", field: "email", sortable: true },
-          { label: "Phone", field: "tel", sortable: true },
-          { label: "Products", field: "products" },
+          { label: "Telèfon", field: "tel", sortable: true },
+          { label: "Productes", field: "products" },
         ],
       };
     },
