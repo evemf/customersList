@@ -1,6 +1,6 @@
 <template>
     <div class="max-w-4xl mx-auto p-6 bg-gray-50">
-        <BackButton class="mb-4" />
+      <BackButton class="mb-4" />
       <h2 class="text-3xl font-semibold text-center mb-6">
         Fitxa de client de {{ customer?.name }}
       </h2>
@@ -35,6 +35,7 @@
   
   <script>
   import BackButton from './BackButton.vue';
+  
   export default {
     props: ['id'],
     components: { BackButton },
@@ -51,20 +52,20 @@
     },
     methods: {
       fetchCustomerDetails() {
-        fetch(`http://localhost:5000/customers/${this.customerId}`)
+        fetch(`${process.env.VUE_APP_BASE_URL}/customers/${this.customerId}`)
           .then((response) => response.json())
           .then((data) => {
             this.customer = data;
           })
-          .catch((error) => console.error('Error fetching customer details:', error));
+          .catch((error) => console.error('Error fetching clients:', error));
       },
       fetchProducts() {
-        fetch('http://localhost:5000/products')
+        fetch(`${process.env.VUE_APP_BASE_URL}/products`)
           .then((response) => response.json())
           .then((data) => {
             this.products = data;
           })
-          .catch((error) => console.error('Error fetching products:', error));
+          .catch((error) => console.error('Error fetching productes:', error));
       },
       getProductById(productId) {
         const product = this.products.find((prod) => prod.id === productId);
