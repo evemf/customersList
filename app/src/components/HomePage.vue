@@ -1,13 +1,18 @@
 <template>
   <div class="home">
-    <h1 class="home__title">Benvinguts al sistema de clients</h1>
-    <router-link to="/customers" class="home__link">Anar al llistat de clients</router-link>
+    <h1 class="home__title">Sistema de clients</h1>
+    <CustomersList />
   </div>
 </template>
 
 <script>
+import CustomersList from './CustomersList.vue';
+
 export default {
-  name: "HomePage"
+  name: "HomePage",
+  components: {
+    CustomersList
+  }
 };
 </script>
 

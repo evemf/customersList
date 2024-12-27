@@ -1,10 +1,9 @@
 <template>
     <div class="customers-table">
-      <h1 class="customers-table__title">Llistat de Clients</h1>
       <vue-good-table
         :columns="columns"
         :rows="customers"
-        :search-options="{ enabled: true }"
+        :search-options="{ enabled: true, placeholder: 'Buscar' }"
         :pagination-options="paginationOptions"
       >
         <template #table-row="{ column, row }">
@@ -26,9 +25,13 @@
             {{ row[column.field] }}
           </template>
         </template>
+        <template #emptystate>
+            <p>No s'han trobat resultats</p>
+        </template>
       </vue-good-table>
     </div>
-  </template>
+  </template>  
+  
   
   <script>
   import { VueGoodTable } from "vue-good-table-next";
@@ -48,13 +51,20 @@
           { label: "Productes", field: "products" },
         ],
         paginationOptions: {
-          enabled: true,
-          perPage: 5,
-          rowsPerPage: "Files per pàgina",
-          next: "Següent",
-          prev: "Previ",
-          search: "Buscar",
-          noResults: "No s'han trobat resultats",
+            enabled: true,
+            mode: 'records',
+            perPage: 5,
+            position: 'bottom',
+            perPageDropdown: [3, 7, 9],
+            dropdownAllowAll: false,
+            setCurrentPage: 2,
+            nextLabel: 'següent',
+            prevLabel: 'anterior',
+            rowsPerPageLabel: 'Clients per pàgina',
+            ofLabel: 'de',
+            pageLabel: 'pàgina',
+            allLabel: 'Tots', 
+            noResults: 'No s\'han trobat resultats'
         },
       };
     },
@@ -89,11 +99,6 @@
   .customers-table {
     font-family: Arial, sans-serif;
     margin: 20px;
-  }
-  
-  .customers-table__title {
-    font-size: 24px;
-    margin-bottom: 15px;
   }
   
   .customers-table__link {
