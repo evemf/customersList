@@ -1,85 +1,106 @@
 <template>
-    <div class="customers-table">
-      <vue-good-table
-        :columns="columns"
-        :rows="customers"
-        :search-options="{ enabled: true, placeholder: 'Buscar' }"
-        :pagination-options="paginationOptions"
+    <div class="customers-table p-6 bg-gray-50">
+      <el-input
+        v-model="search"
+        placeholder="Buscar"
+        clearable
+        class="mb-4"
+      />
+      
+      <el-table
+        :data="pagedCustomers"
+        border
+        stripe
+        style="width: 100%"
+        @row-click="goToCustomerPage"
+        empty-text="No s'han trobat resultats"
       >
-        <template #table-row="{ column, row }">
-          <template v-if="column.field === 'name'">
-            <router-link :to="'/customer/' + row.id" class="customers-table__link">
-              {{ row.name }}
-            </router-link>
-          </template>
-          <template v-else-if="column.field === 'products'">
+        <el-table-column
+          label="Nom"
+          prop="name"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          label="Email"
+          prop="email"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          label="Telèfon"
+          prop="tel"
+          sortable
+        ></el-table-column>
+        <el-table-column label="Productes">
+          <template #default="{ row }">
             <ul>
               <li v-for="productId in row.products" :key="productId">
-                <router-link :to="'/product/' + productId" class="customers-table__link">
-                  {{ getProductById(productId) }}
-                </router-link>
+                {{ getProductById(productId) }}
               </li>
             </ul>
           </template>
-          <template v-else>
-            {{ row[column.field] }}
-          </template>
-        </template>
+        </el-table-column>
+      </el-table>
   
-        <template #emptystate>
-          <p>No s'han trobat resultats</p>
-        </template>
-      </vue-good-table>
+      <el-pagination
+        v-if="filteredCustomers.length > 0"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="filteredCustomers.length"
+        layout="total, prev, pager, next"
+        @current-change="handlePageChange"
+        class="mt-4 text-right"
+      />
     </div>
   </template>
   
   <script>
-  import { VueGoodTable } from "vue-good-table-next";
-  import "vue-good-table-next/dist/vue-good-table-next.css";
+  import { ElTable, ElTableColumn, ElInput, ElPagination } from 'element-plus';
   
   export default {
     name: "CustomersList",
-    components: { VueGoodTable },
+    components: {
+      ElTable,
+      ElTableColumn,
+      ElInput,
+      ElPagination,
+    },
     data() {
       return {
         customers: [],
         products: [],
-        columns: [
-          { label: "Nom", field: "name", sortable: true },
-          { label: "Email", field: "email", sortable: true },
-          { label: "Telèfon", field: "tel", sortable: true },
-          { label: "Productes", field: "products" },
-        ],
-        paginationOptions: {
-          enabled: true,
-          mode: 'records',
-          perPage: 5,
-          position: 'bottom',
-          perPageDropdown: [1, 2, 5, 10, 50],
-          dropdownAllowAll: false,
-          setCurrentPage: 2,
-          nextLabel: 'Següent',
-          prevLabel: 'Anterior',
-          rowsPerPageLabel: 'Clients per pàgina',
-          ofLabel: 'de',
-          pageLabel: 'pàgina',
-          allLabel: 'Tots'
-        },
+        search: "",
+        currentPage: 1,
+        pageSize: 5,
       };
+    },
+    computed: {
+      filteredCustomers() {
+        return this.customers.filter((customer) => {
+          return Object.values(customer)
+            .join(" ")
+            .toLowerCase()
+            .includes(this.search.toLowerCase());
+        });
+      },
+      pagedCustomers() {
+        const startIndex = (this.currentPage - 1) * this.pageSize;
+        const endIndex = startIndex + this.pageSize;
+        return this.filteredCustomers.slice(startIndex, endIndex);
+      }
     },
     mounted() {
       this.fetchData();
     },
     methods: {
       fetchData() {
-        fetch("http://localhost:5000/customers")
+        fetch(`${process.env.VUE_APP_BASE_URL}/customers`)
           .then((response) => response.json())
           .then((data) => {
             this.customers = data;
           })
           .catch((error) => console.error("Error fetching customers:", error));
   
-        fetch("http://localhost:5000/products")
+        fetch(`${process.env.VUE_APP_BASE_URL}/products`)
           .then((response) => response.json())
           .then((data) => {
             this.products = data;
@@ -90,60 +111,25 @@
         const product = this.products.find((prod) => prod.id === productId);
         return product ? product.name : "Producte desconegut";
       },
-    },
+      goToCustomerPage(row) {
+        const customerId = row.id;
+        if (customerId) {
+          this.$router.push(`/customer/${customerId}`);
+        } else {
+          console.error("ID de cliente no encontrado");
+        }
+      },
+      handlePageChange(page) {
+        this.currentPage = page;
+      }
+    }
   };
   </script>
   
   <style scoped>
   .customers-table {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    overflow-x: auto;
-  }
-  
-  .customers-table__link {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .customers-table__link:hover {
-    text-decoration: underline;
-  }
-  
-  .vue-good-table {
-    font-size: 16px;
-    color: #333;
-  }
-  
-  @media (max-width: 768px) {
-    .vue-good-table .vgt-table {
-      display: block;
-      width: 100%;
-      overflow-x: auto;
-    }
-  
-    .vue-good-table .vgt-th, .vue-good-table .vgt-td {
-      display: block;
-      text-align: right;
-      padding: 5px;
-      border: 1px solid #ddd;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-  
-    .vue-good-table .vgt-table tr {
-      display: block;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-    }
-  
-    .vue-good-table .vgt-table td::before {
-      content: attr(data-label);
-      font-weight: bold;
-      display: block;
-      text-align: left;
-      margin-bottom: 5px;
-    }
+    max-width: 100%;
+    margin: 0 auto;
   }
   </style>
   

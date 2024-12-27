@@ -1,162 +1,83 @@
 <template>
-    <div class="customer-card">
-      <button @click="goBack" class="customer-card__back-btn">
-        ← Enrere
-      </button>
-      <div class="customer-card__content">
-        <h1 class="customer-card__title">Perfil de Client</h1>
-        <div v-if="customer" class="customer-card__info">
-          <div class="customer-card__image">
-            <img :src="customer.profileImage" alt="Profile Image" class="customer-card__profile-image" />
-          </div>
-          <div class="customer-card__details">
-            <p><strong>Nom:</strong> {{ customer.name }}</p>
-            <p><strong>Email:</strong> {{ customer.email }}</p>
-            <p><strong>Telèfon:</strong> {{ customer.tel }}</p>
-          </div>
-          <div class="customer-card__products">
-            <h2 class="customer-card__subtitle">Productes Contractats</h2>
-            <ul>
-              <li v-for="productId in customer.products" :key="productId" class="customer-card__product-item">
-                <router-link :to="'/product/' + productId" class="customer-card__link">
-                  {{ getProductById(productId) }}
-                </router-link>
-              </li>
-            </ul>
+    <div class="max-w-4xl mx-auto p-6 bg-gray-50">
+        <BackButton class="mb-4" />
+      <h2 class="text-3xl font-semibold text-center mb-6">
+        Fitxa de client de {{ customer?.name }}
+      </h2>
+  
+      <div v-if="customer" class="bg-white p-6 rounded-lg shadow-lg">
+        <div class="flex items-center mb-6">
+          <img
+            :src="customer.profileImage"
+            alt="Foto de perfil"
+            class="w-32 h-32 rounded-full object-cover mr-6"
+          />
+          <div>
+            <h3 class="text-2xl font-semibold text-gray-800">{{ customer.name }}</h3>
+            <p class="text-gray-600">{{ customer.email }}</p>
+            <p class="text-gray-600">{{ customer.tel }}</p>
           </div>
         </div>
-        <div v-else>
-          <p>Carregant...</p>
+  
+        <div class="mt-6">
+          <h4 class="text-xl font-semibold text-gray-800">Productes:</h4>
+          <ul class="list-disc pl-6 space-y-2">
+            <li v-for="productId in customer.products" :key="productId" class="text-gray-700">
+              <router-link :to="'/product/' + productId" class="text-blue-600 hover:text-blue-800">
+                {{ getProductById(productId) }}
+              </router-link>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   </template>
   
   <script>
+  import BackButton from './BackButton.vue';
   export default {
-    name: "CustomerCard",
+    props: ['id'],
+    components: { BackButton },
     data() {
       return {
+        customerId: this.id,
         customer: null,
-        products: [],
+        products: []
       };
     },
     mounted() {
-      const customerId = this.$route.params.id;
-      this.fetchCustomer(customerId);
+      this.fetchCustomerDetails();
       this.fetchProducts();
     },
     methods: {
-      fetchCustomer(customerId) {
-        fetch(`http://localhost:5000/customers/${customerId}`)
-          .then(response => response.json())
-          .then(data => {
+      fetchCustomerDetails() {
+        fetch(`http://localhost:5000/customers/${this.customerId}`)
+          .then((response) => response.json())
+          .then((data) => {
             this.customer = data;
           })
-          .catch(error => console.error("Error llistant client:", error));
+          .catch((error) => console.error('Error fetching customer details:', error));
       },
       fetchProducts() {
-        fetch("http://localhost:5000/products")
-          .then(response => response.json())
-          .then(data => {
+        fetch('http://localhost:5000/products')
+          .then((response) => response.json())
+          .then((data) => {
             this.products = data;
           })
-          .catch(error => console.error("Error llistant productes:", error));
+          .catch((error) => console.error('Error fetching products:', error));
       },
       getProductById(productId) {
         const product = this.products.find((prod) => prod.id === productId);
-        return product ? product.name : "Producte deconegut";
-      },
-      goBack() {
-        this.$router.go(-1); 
+        return product ? product.name : 'Producte desconegut';
       }
-    },
+    }
   };
   </script>
   
   <style scoped>
-  .customer-card {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  }
-  
-  .customer-card__back-btn {
-    background: none;
-    border: none;
-    font-size: 18px;
-    color: #007bff;
-    cursor: pointer;
-    margin-bottom: 20px;
-  }
-  
-  .customer-card__back-btn:hover {
-    text-decoration: underline;
-  }
-  
-  .customer-card__content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .customer-card__title {
-    font-size: 28px;
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: bold;
-  }
-  
-  .customer-card__subtitle {
-    font-size: 20px;
-    margin-top: 20px;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  .customer-card__info {
-    margin-bottom: 30px;
-  }
-  
-  .customer-card__details p {
-    font-size: 18px;
-    margin: 8px 0;
-    color: #555;
-  }
-  
-  .customer-card__products ul {
-    list-style-type: none;
-    padding-left: 0;
-  }
-  
-  .customer-card__product-item {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .customer-card__link {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .customer-card__link:hover {
-    text-decoration: underline;
-  }
-  
-  .customer-card__link:active {
-    color: #0056b3;
-  }
-  
-  .customer-card__image img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 20px;
+  .max-w-4xl {
+    max-width: 80%;
+    margin: 0 auto;
   }
   </style>
   

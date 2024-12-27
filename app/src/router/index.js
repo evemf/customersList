@@ -32,7 +32,7 @@ const routes = [
 
 // Use router
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 });
 
