@@ -1,19 +1,24 @@
 <template>
     <div class="customer-card">
-      <h1 class="customer-card__title">Fitxa del client</h1>
+      <button @click="goBack" class="customer-card__back-btn">
+        ← Back
+      </button>
+      <h1 class="customer-card__title">Customer Profile</h1>
       <div v-if="customer">
-        <p class="customer-card__label"><strong>Nom:</strong> {{ customer.name }}</p>
-        <p class="customer-card__label"><strong>Email:</strong> {{ customer.email }}</p>
-        <p class="customer-card__label"><strong>Telèfon:</strong> {{ customer.tel }}</p>
-        <h2 class="customer-card__subtitle">Productes contractats</h2>
-        <ul class="customer-card__products-list">
-          <li v-for="product in products" :key="product.id" class="customer-card__product-item">
-            {{ product.name }}: {{ product.descr }}
+        <p><strong>Name:</strong> {{ customer.name }}</p>
+        <p><strong>Email:</strong> {{ customer.email }}</p>
+        <p><strong>Phone:</strong> {{ customer.tel }}</p>
+        <h2>Products</h2>
+        <ul>
+          <li v-for="productId in customer.products" :key="productId">
+            <router-link :to="'/product/' + productId" class="customer-card__link">
+              {{ getProductById(productId) }}
+            </router-link>
           </li>
         </ul>
       </div>
       <div v-else>
-        <p class="customer-card__loading">Carregant...</p>
+        <p>Loading...</p>
       </div>
     </div>
   </template>
@@ -24,7 +29,7 @@
     data() {
       return {
         customer: null,
-        products: []
+        products: [],
       };
     },
     mounted() {
@@ -45,18 +50,19 @@
         fetch(`http://localhost:5000/customers/${customerId}`)
           .then(response => response.json())
           .then(customer => {
-            const productsIds = customer.products;
-            const promises = productsIds.map(id =>
-              fetch(`http://localhost:5000/products/${id}`).then(res => res.json())
-            );
-            Promise.all(promises)
-              .then(products => {
-                this.products = products;
-              })
-              .catch(error => console.error("Error fetching products:", error));
-          });
+            const productIds = customer.products;
+            this.products = productIds;
+          })
+          .catch(error => console.error("Error fetching products:", error));
+      },
+      getProductById(productId) {
+        const product = this.products.find(prod => prod.id === productId);
+        return product ? product.name : "Unknown Product";
+      },
+      goBack() {
+        this.$router.go(-1); // Navega a la página anterior en el historial
       }
-    }
+    },
   };
   </script>
   
@@ -66,34 +72,30 @@
     margin: 20px;
   }
   
+  .customer-card__back-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .customer-card__back-btn:hover {
+    text-decoration: underline;
+  }
+  
   .customer-card__title {
     font-size: 24px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
   
-  .customer-card__label {
-    font-size: 18px;
-    margin-bottom: 5px;
+  .customer-card__link {
+    color: #007bff;
+    text-decoration: none;
   }
   
-  .customer-card__subtitle {
-    font-size: 20px;
-    margin-top: 20px;
-  }
-  
-  .customer-card__products-list {
-    list-style-type: none;
-    padding-left: 0;
-  }
-  
-  .customer-card__product-item {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
-  
-  .customer-card__loading {
-    font-size: 16px;
-    color: grey;
+  .customer-card__link:hover {
+    text-decoration: underline;
   }
   </style>
   

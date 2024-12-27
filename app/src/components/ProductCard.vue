@@ -1,12 +1,15 @@
 <template>
     <div class="product-card">
-      <h1 class="product-card__title">Fitxa de producte</h1>
+      <button @click="goBack" class="product-card__back-btn">
+        ← Back
+      </button>
+      <h1 class="product-card__title">Product Profile</h1>
       <div v-if="product">
-        <p class="product-card__label"><strong>Nom:</strong> {{ product.name }}</p>
-        <p class="product-card__label"><strong>Descripció:</strong> {{ product.descr }}</p>
+        <p><strong>Name:</strong> {{ product.name }}</p>
+        <p><strong>Description:</strong> {{ product.descr }}</p>
       </div>
       <div v-else>
-        <p class="product-card__loading">Carregant...</p>
+        <p>Loading...</p>
       </div>
     </div>
   </template>
@@ -16,7 +19,7 @@
     name: "ProductCard",
     data() {
       return {
-        product: null
+        product: null,
       };
     },
     mounted() {
@@ -30,9 +33,12 @@
           .then(data => {
             this.product = data;
           })
-          .catch(error => console.error("Error fetching producto:", error));
+          .catch(error => console.error("Error fetching product:", error));
+      },
+      goBack() {
+        this.$router.go(-1); // Navega a la página anterior en el historial
       }
-    }
+    },
   };
   </script>
   
@@ -42,18 +48,21 @@
     margin: 20px;
   }
   
+  .product-card__back-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .product-card__back-btn:hover {
+    text-decoration: underline;
+  }
+  
   .product-card__title {
     font-size: 24px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
+  </style>
   
-  .product-card__label {
-    font-size: 18px;
-    margin-bottom: 5px;
-  }
-  
-  .product-card__loading {
-    font-size: 16px;
-    color: grey;
-  }
-  </style>  
