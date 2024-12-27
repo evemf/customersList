@@ -5,7 +5,7 @@
         :columns="columns"
         :rows="customers"
         :search-options="{ enabled: true }"
-        :pagination-options="{ enabled: true, perPage: 5 }"
+        :pagination-options="paginationOptions"
       >
         <template #table-row="{ column, row }">
           <template v-if="column.field === 'name'">
@@ -47,6 +47,15 @@
           { label: "Telèfon", field: "tel", sortable: true },
           { label: "Productes", field: "products" },
         ],
+        paginationOptions: {
+          enabled: true,
+          perPage: 5,
+          rowsPerPage: "Files per pàgina",
+          next: "Següent",
+          prev: "Previ",
+          search: "Buscar",
+          noResults: "No s'han trobat resultats",
+        },
       };
     },
     mounted() {
@@ -60,6 +69,7 @@
             this.customers = data;
           })
           .catch((error) => console.error("Error fetching customers:", error));
+  
         fetch("http://localhost:5000/products")
           .then((response) => response.json())
           .then((data) => {
@@ -69,7 +79,7 @@
       },
       getProductById(productId) {
         const product = this.products.find((prod) => prod.id === productId);
-        return product ? product.name : "Unknown Product";
+        return product ? product.name : "Producte desconegut";
       },
     },
   };
