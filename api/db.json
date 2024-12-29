@@ -23,6 +23,22 @@
         "tel": "123498765",
         "profileImage": "https://randomuser.me/api/portraits/men/3.jpg",
         "products": [1, 3]
+      },
+      {
+        "id": 4,
+        "name": "Miguel Ojeda",
+        "email": "miguel.ojeda@email.com",
+        "tel": "345692384",
+        "profileImage": "https://randomuser.me/api/portraits/men/4.jpg",
+        "products": [1, 2, 3]
+      },
+      {
+        "id": 5,
+        "name": "María Martínez",
+        "email": "maria.martinez@email.com",
+        "tel": "999922221",
+        "profileImage": "https://randomuser.me/api/portraits/women/3.jpg",
+        "products": [3]
       }
     ],
     "products": [
