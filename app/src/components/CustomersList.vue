@@ -15,21 +15,9 @@
         @row-click="goToCustomerPage"
         empty-text="No s'han trobat resultats"
       >
-        <el-table-column
-          label="Nom"
-          prop="name"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          label="Email"
-          prop="email"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          label="Telèfon"
-          prop="tel"
-          sortable
-        ></el-table-column>
+        <el-table-column label="Nom" prop="name" sortable></el-table-column>
+        <el-table-column label="Email" prop="email" sortable></el-table-column>
+        <el-table-column label="Telèfon" prop="tel" sortable></el-table-column>
         <el-table-column label="Productes">
           <template #default="{ row }">
             <ul>
@@ -54,7 +42,7 @@
   </template>
   
   <script>
-  import { ElTable, ElTableColumn, ElInput, ElPagination } from 'element-plus';
+  import { ElTable, ElTableColumn, ElInput, ElPagination } from "element-plus";
   
   export default {
     name: "CustomersList",
@@ -70,23 +58,20 @@
         products: [],
         search: "",
         currentPage: 1,
-        pageSize: 5,
+        pageSize: 3,
       };
     },
     computed: {
       filteredCustomers() {
-        return this.customers.filter((customer) => {
-          return Object.values(customer)
-            .join(" ")
-            .toLowerCase()
-            .includes(this.search.toLowerCase());
-        });
+        return this.customers.filter((customer) =>
+          Object.values(customer).join(" ").toLowerCase().includes(this.search.toLowerCase())
+        );
       },
       pagedCustomers() {
         const startIndex = (this.currentPage - 1) * this.pageSize;
         const endIndex = startIndex + this.pageSize;
         return this.filteredCustomers.slice(startIndex, endIndex);
-      }
+      },
     },
     mounted() {
       this.fetchData();
@@ -115,14 +100,12 @@
         const customerId = row.id;
         if (customerId) {
           this.$router.push(`/customer/${customerId}`);
-        } else {
-          console.error("ID de cliente no encontrado");
         }
       },
       handlePageChange(page) {
         this.currentPage = page;
-      }
-    }
+      },
+    },
   };
   </script>
   
